@@ -24,6 +24,13 @@ repositories {
     maven(url = "https://papermc.io/repo/repository/maven-public/")
     maven(url = "https://libraries.minecraft.net")
     maven(url = "https://jitpack.io")
+    maven {
+        url = uri("https://maven.pkg.github.com/tororo1066/TororoPluginAPI")
+        credentials {
+            username = System.getenv("GITHUB_USERNAME")
+            password = System.getenv("GITHUB_TOKEN")
+        }
+    }
 }
 
 val shadowImplementation: Configuration by configurations.creating
@@ -36,18 +43,12 @@ dependencies {
     compileOnly("tororo1066:base:$apiVersion")
     shadowImplementation("tororo1066:tororopluginapi:$apiVersion")
     compileOnly("com.mojang:brigadier:1.0.18")
+    compileOnly("org.mongodb:mongodb-driver-sync:4.11.1")
 }
 
 tasks.withType<ShadowJar> {
     configurations = listOf(shadowImplementation)
     archiveClassifier.set("")
-    exclude("kotlin/**")
-    exclude("org/intellij/lang/annotations/**")
-    exclude("org/jetbrains/annotations/**")
-
-    relocate("kotlin", "tororo1066.libs.kotlin")
-    relocate("org.intellij.lang.annotations", "tororo1066.libs.org.intellij.lang.annotations")
-    relocate("org.jetbrains.annotations", "tororo1066.libs.org.jetbrains.annotations")
 }
 
 tasks.named("build") {
